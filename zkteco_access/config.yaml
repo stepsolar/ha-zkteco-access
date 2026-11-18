@@ -1,5 +1,5 @@
 name: ZKTeco Access
-version: "1.0.0"
+version: "1.0.1"
 slug: zkteco_access
 description: >-
   Controllo accessi ZKTeco C3/inBio (sostituisce ZKAccess 3.5 sul PC): apertura porte,

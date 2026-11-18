@@ -535,6 +535,22 @@ class App:
             return stats
         r("POST", "/api/import/mdb", import_mdb)
 
+        async def import_chunk(req):
+            # upload a pezzi: il proxy ingress di Home Assistant rifiuta corpi grandi (errore 413)
+            n, total = int(req.arg("n", "0")), int(req.arg("total", "1"))
+            part = api.path_in_data("upload_zkaccess.mdb.part")
+            with open(part, "wb" if n == 0 else "ab") as f:
+                f.write(req.body)
+            if n + 1 < total:
+                return {"received": n + 1, "total": total}
+            path = api.path_in_data("upload_zkaccess.mdb")
+            os.replace(part, path)
+            replace = req.arg("replace") == "1"
+            stats = await asyncio.get_running_loop().run_in_executor(None, lambda: zkaccess_import.import_mdb(path, s, replace))
+            await m.reload_all()
+            return stats
+        r("POST", "/api/import/chunk", import_chunk)
+
         async def backup(req):
             return Response(api.export_backup(), 200, "application/json; charset=utf-8",
                             {"Content-Disposition": "attachment; filename=zkteco_access_backup.json"})

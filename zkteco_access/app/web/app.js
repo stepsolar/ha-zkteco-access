@@ -478,8 +478,15 @@ $("#btnSaveSettings").onclick = () => run(() => api("api/settings", { body: { ev
 $("#btnImportMdb").onclick = async () => {
   const f = $("#mdbFile").files[0]; if (!f) return toast("Scegli il file zkaccess.mdb", true);
   if ($("#mdbReplace").checked && !confirm("Cancellare tutti i dati attuali e sostituirli con quelli di ZKAccess?")) return;
-  $("#importResult").textContent = `Caricamento ${(f.size / 1048576).toFixed(1)} MB…`;
-  const r = await run(() => api("api/import/mdb?replace=" + ($("#mdbReplace").checked ? 1 : 0), { body: f, raw: true }), "Importazione completata");
+  const CH = 4 * 1048576, total = Math.ceil(f.size / CH), rep = $("#mdbReplace").checked ? 1 : 0;
+  const r = await run(async () => {
+    let res;
+    for (let n = 0; n < total; n++) {
+      $("#importResult").textContent = `Caricamento ${Math.round((n + 1) * 100 / total)}% di ${(f.size / 1048576).toFixed(1)} MB…` + (n + 1 === total ? " importazione…" : "");
+      res = await api(`api/import/chunk?n=${n}&total=${total}&replace=${rep}`, { body: f.slice(n * CH, (n + 1) * CH), raw: true });
+    }
+    return res;
+  }, "Importazione completata");
   $("#importResult").textContent = JSON.stringify(r, null, 1); loadState();
 };
 $("#btnImportPath").onclick = async () => {
