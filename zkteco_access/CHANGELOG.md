@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.1
+- L'add-on accetta le richieste da tutta la rete interna di Home Assistant (172.30.32.0/23) e registra nel log quelle rifiutate.
+- Integrazione: trova da sola il nome host dell'add-on installato da GitHub e mostra il motivo preciso dell'errore (host non trovato, connessione rifiutata, accesso negato).
+
 ## 1.1.0
 - Nuova integrazione Home Assistant **ZKTeco Access** (HACS, cartella custom_components) che usa l'add-on come unico punto di accesso ai controller: serrature, pulsanti, sensori, eventi e servizi tessere.
 - L'add-on si annuncia a Home Assistant (scoperta automatica dell'integrazione) e accetta le richieste di Home Assistant.

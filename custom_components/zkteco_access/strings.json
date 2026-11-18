@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "Add-on ZKTeco Access",
-        "description": "L'integrazione comunica solo con l'add-on ZKTeco Access, che gestisce i controller. Di norma viene trovato da solo: inserisci i dati solo se non compare tra i dispositivi rilevati.",
+        "description": "L'integrazione comunica solo con l'add-on ZKTeco Access, che gestisce i controller. Host trovati: {hosts}. Il nome host esatto è nella pagina dell'add-on (Info → Hostname).\n\n{error}",
         "data": {
           "host": "Host dell'add-on",
           "port": "Porta",
@@ -15,12 +15,13 @@
       },
       "hassio_confirm": {
         "title": "ZKTeco Access",
-        "description": "Vuoi collegare Home Assistant all'add-on {addon}? Verranno create serrature, sensori ed eventi per tutte le porte."
+        "description": "Vuoi collegare Home Assistant all'add-on {addon}? Verranno create serrature, sensori ed eventi per tutte le porte.\n\n{error}"
       }
     },
     "error": {
-      "cannot_connect": "Impossibile raggiungere l'add-on ZKTeco Access. È avviato?",
-      "not_addon": "L'indirizzo risponde ma non è l'add-on ZKTeco Access"
+      "cannot_connect": "Impossibile raggiungere l'add-on ZKTeco Access (vedi il dettaglio sopra). È avviato alla versione 1.1.1 o successiva?",
+      "not_addon": "L'indirizzo risponde ma non è l'add-on ZKTeco Access",
+      "forbidden": "L'add-on ha rifiutato la richiesta: aggiornalo alla 1.1.1 oppure imposta lo stesso token API qui e nell'add-on."
     },
     "abort": {
       "already_configured": "ZKTeco Access è già configurato"

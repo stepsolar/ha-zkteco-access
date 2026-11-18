@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "Add-on ZKTeco Access",
-        "description": "The integration only talks to the ZKTeco Access add-on, which manages the panels. It is normally discovered automatically.",
+        "description": "The integration only talks to the ZKTeco Access add-on. Hosts found: {hosts}. The exact hostname is on the add-on page.\n\n{error}",
         "data": {
           "host": "Add-on host",
           "port": "Port",
@@ -15,12 +15,13 @@
       },
       "hassio_confirm": {
         "title": "ZKTeco Access",
-        "description": "Connect Home Assistant to the {addon} add-on? Locks, sensors and events will be created for all doors."
+        "description": "Connect Home Assistant to the {addon} add-on?\n\n{error}"
       }
     },
     "error": {
-      "cannot_connect": "Cannot reach the ZKTeco Access add-on. Is it running?",
-      "not_addon": "The address answers but it is not the ZKTeco Access add-on"
+      "cannot_connect": "Cannot reach the ZKTeco Access add-on (see details above). Is version 1.1.1 or later running?",
+      "not_addon": "The address answers but it is not the ZKTeco Access add-on",
+      "forbidden": "The add-on refused the request: update it to 1.1.1 or set the same API token here and in the add-on."
     },
     "abort": {
       "already_configured": "ZKTeco Access is already configured"

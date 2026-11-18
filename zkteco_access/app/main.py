@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import csv
 import io
+import ipaddress
 import json
 import logging
 import mimetypes
@@ -28,6 +29,7 @@ DATA_DIR = os.environ.get("ZK_DATA", "/data")
 WEB_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "web")
 _LOGGER = logging.getLogger("zkteco")
 
+HASSIO_NET = ipaddress.ip_network("172.30.32.0/23")
 Handler = Callable[["Request"], Awaitable[Any]]
 
 
@@ -209,7 +211,8 @@ class App:
                 url = urllib.parse.urlsplit(target)
                 req = Request(method.upper(), url.path, urllib.parse.parse_qs(url.query), headers, body, peer)
                 if not self._allowed(req):
-                    await self._write(writer, Response("forbidden", 403, "text/plain"))
+                    _LOGGER.warning("Richiesta da %s rifiutata (fuori dalla rete di Home Assistant e senza token)", peer)
+                    await self._write(writer, Response('{"error":"accesso negato: imposta api_token"}', 403))
                     break
                 if req.path.endswith("/api/stream"):
                     await self._sse_stream(writer)
@@ -224,9 +227,13 @@ class App:
             writer.close()
 
     def _allowed(self, req: Request) -> bool:
-        # 172.30.32.2 = ingress/Supervisor, 172.30.32.1 = Home Assistant (integrazione ZKTeco Access)
-        if req.peer in ("172.30.32.2", "172.30.32.1", "127.0.0.1", "::1"):
-            return True
+        # rete interna di Home Assistant (172.30.32.0/23): Supervisor/ingress, Home Assistant (integrazione)
+        try:
+            ip = ipaddress.ip_address(req.peer.removeprefix("::ffff:"))
+            if ip.is_loopback or ip in HASSIO_NET:
+                return True
+        except ValueError:
+            pass
         token = self.options.get("api_token") or ""
         if token:
             auth = req.headers.get("authorization", "")

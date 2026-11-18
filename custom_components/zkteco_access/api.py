@@ -16,12 +16,17 @@ _LOGGER = logging.getLogger(__name__)
 class AddonError(Exception):
     """Errore restituito dall'add-on o di rete."""
 
+    def __init__(self, message: str, kind: str = "http") -> None:
+        super().__init__(message)
+        self.kind = kind
+
 
 class AddonClient:
     """Tutte le operazioni passano dall'add-on: è l'unico a parlare con i controller."""
 
     def __init__(self, session: aiohttp.ClientSession, host: str, port: int, token: str = "") -> None:
         self._session = session
+        self.host, self.port = host, port
         self.base = f"http://{host}:{port}/"
         self._headers = {"Authorization": f"Bearer {token}"} if token else {}
 
@@ -33,12 +38,18 @@ class AddonClient:
             ) as resp:
                 text = await resp.text()
                 data = json.loads(text) if text and resp.content_type == "application/json" else text
+                if resp.status == 403:
+                    raise AddonError("accesso negato dall'add-on (serve il token API)", "forbidden")
                 if resp.status >= 400:
                     msg = data.get("error") if isinstance(data, dict) else str(data)
-                    raise AddonError(msg or f"HTTP {resp.status}")
+                    raise AddonError(msg or f"HTTP {resp.status}", "http")
                 return data
+        except aiohttp.ClientConnectorDNSError as err:
+            raise AddonError(f"host '{self.host}' non trovato", "dns") from err
+        except aiohttp.ClientConnectorError as err:
+            raise AddonError(f"connessione a {self.host}:{self.port} rifiutata o assente: {err}", "connect") from err
         except (aiohttp.ClientError, asyncio.TimeoutError) as err:
-            raise AddonError(f"add-on non raggiungibile: {err}") from err
+            raise AddonError(f"add-on non raggiungibile: {err or type(err).__name__}", "connect") from err
 
     async def state(self) -> dict:
         return await self.request("GET", "api/state")
