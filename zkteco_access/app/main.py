@@ -86,6 +86,32 @@ class App:
         await self.manager.start()
         await self._start_mqtt()
         asyncio.ensure_future(self._housekeeping())
+        asyncio.ensure_future(self._announce())
+
+    async def _supervisor(self, method: str, path: str, data: dict | None = None) -> dict:
+        token = os.environ.get("SUPERVISOR_TOKEN")
+        if not token:
+            raise RuntimeError("non in esecuzione sotto il Supervisor")
+        body = json.dumps(data).encode() if data is not None else None
+        req = urllib.request.Request(f"http://supervisor{path}", data=body, method=method,
+                                     headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"})
+        loop = asyncio.get_running_loop()
+        return await loop.run_in_executor(None, lambda: json.load(urllib.request.urlopen(req, timeout=10)))
+
+    async def _announce(self) -> None:
+        """Annuncia l'add-on all'integrazione ZKTeco Access (scoperta automatica in Home Assistant)."""
+        if not os.environ.get("SUPERVISOR_TOKEN"):
+            return
+        import socket
+        cfg = {"host": socket.gethostname(), "port": int(self.options.get("port", 8099))}
+        for _ in range(5):
+            try:
+                await self._supervisor("POST", "/discovery", {"service": "zkteco_access", "config": cfg})
+                _LOGGER.info("Annunciato a Home Assistant come %s:%s (integrazione ZKTeco Access)", cfg["host"], cfg["port"])
+                return
+            except Exception as err:  # noqa: BLE001
+                _LOGGER.debug("discovery: %s", err)
+                await asyncio.sleep(30)
 
     async def _start_mqtt(self) -> None:
         cfg = None
@@ -101,7 +127,10 @@ class App:
             except Exception as err:  # noqa: BLE001
                 _LOGGER.warning("Servizio MQTT non disponibile (%s): entità Home Assistant disattivate. "
                                 "Installa il broker Mosquitto o imposta mqtt_host.", err)
-        if not cfg or not self.options.get("mqtt_enabled", True):
+        if not cfg:
+            return
+        if not self.options.get("mqtt_enabled", False):
+            await self._mqtt_cleanup(cfg)
             return
         base = self.options.get("mqtt_topic", "zkteco_access")
         self.mqtt = MQTTClient(cfg["host"], int(cfg.get("port", 1883)), cfg.get("username", ""), cfg.get("password", ""),
@@ -109,6 +138,27 @@ class App:
         self.bridge = HABridge(self.store, self.manager, self.api, self.mqtt, base,
                                self.options.get("discovery_prefix", "homeassistant"))
         self.mqtt.start()
+
+    async def _mqtt_cleanup(self, cfg: dict) -> None:
+        """MQTT disattivato: rimuove da Home Assistant le entità create in precedenza (evita doppioni con l'integrazione)."""
+        old = self.store.get_setting("ha_entities", [])
+        if not old:
+            return
+        prefix = self.options.get("discovery_prefix", "homeassistant")
+        cl = MQTTClient(cfg["host"], int(cfg.get("port", 1883)), cfg.get("username", ""), cfg.get("password", ""),
+                        client_id="zkteco_access_cleanup")
+        cl.start()
+        for _ in range(50):
+            if cl.connected:
+                break
+            await asyncio.sleep(0.2)
+        if cl.connected:
+            for ent in old:
+                await cl.publish(f"{prefix}/{ent}/config", "", retain=True)
+            self.store.set_setting("ha_entities", [])
+            _LOGGER.info("MQTT disattivato: rimosse %d entità MQTT precedenti", len(old))
+            await asyncio.sleep(1)
+        await cl.stop()
 
     async def _housekeeping(self) -> None:
         while True:
@@ -174,7 +224,8 @@ class App:
             writer.close()
 
     def _allowed(self, req: Request) -> bool:
-        if req.peer in ("172.30.32.2", "127.0.0.1", "::1"):
+        # 172.30.32.2 = ingress/Supervisor, 172.30.32.1 = Home Assistant (integrazione ZKTeco Access)
+        if req.peer in ("172.30.32.2", "172.30.32.1", "127.0.0.1", "::1"):
             return True
         token = self.options.get("api_token") or ""
         if token:

@@ -12,7 +12,8 @@ configuration:
   auto_disable_expired:
     name: Disattiva automaticamente le tessere scadute
   mqtt_enabled:
-    name: Crea entità Home Assistant (MQTT)
+    name: Crea entità Home Assistant via MQTT
+    description: Non serve se usi l'integrazione ZKTeco Access (consigliata). Se lo disattivi, le entità MQTT già create vengono rimosse.
   mqtt_topic:
     name: Topic MQTT base
   discovery_prefix:

@@ -64,7 +64,7 @@ async def scenario(tmp):
     await br._on_message(f"zkteco_access/door/{door['id']}/set", b"UNLOCK")
     assert sim.controls[-1][:3] == bytes([1, 1, 1])
     # comando JSON grant
-    lid = st.save_level({"name": "Spa", "doors": [door["id"]]})
+    st.save_level({"name": "Spa", "doors": [door["id"]]})
     await br._on_message("zkteco_access/cmd", json.dumps({"action": "grant", "card": "123456", "name": "Cliente", "levels": ["Spa"]}).encode())
     assert sim.data["user"][0]["CardNo"] == 123456
     await asyncio.sleep(0.2)

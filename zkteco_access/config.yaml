@@ -1,5 +1,5 @@
 name: ZKTeco Access
-version: "1.0.2"
+version: "1.1.0"
 slug: zkteco_access
 description: >-
   Controllo accessi ZKTeco C3/inBio (sostituisce ZKAccess 3.5 sul PC): apertura porte,
@@ -20,6 +20,8 @@ panel_icon: mdi:door-closed-lock
 panel_title: Controllo accessi
 services:
   - mqtt:want
+discovery:
+  - zkteco_access
 map:
   - share:rw
 ports:
@@ -32,7 +34,7 @@ options:
   timeout: 4
   sync_time_on_connect: true
   auto_disable_expired: true
-  mqtt_enabled: true
+  mqtt_enabled: false
   mqtt_topic: zkteco_access
   discovery_prefix: homeassistant
   import_path: /share/zkaccess.mdb

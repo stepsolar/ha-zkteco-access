@@ -1,0 +1,76 @@
+grant_card:
+  fields:
+    card:
+      example: "2095868724"
+      selector:
+        text:
+    pin:
+      example: "1001"
+      selector:
+        text:
+    name:
+      example: "Rossi"
+      selector:
+        text:
+    group:
+      example: "101"
+      selector:
+        text:
+    levels:
+      example: '["101", "Cancello"]'
+      selector:
+        text:
+          multiple: true
+    doors:
+      selector:
+        text:
+          multiple: true
+    start_date:
+      selector:
+        date:
+    end_date:
+      selector:
+        date:
+    add:
+      default: false
+      selector:
+        boolean:
+revoke_card:
+  fields:
+    card:
+      selector:
+        text:
+    pin:
+      selector:
+        text:
+enable_card:
+  fields:
+    card:
+      selector:
+        text:
+    pin:
+      selector:
+        text:
+disable_card:
+  fields:
+    card:
+      selector:
+        text:
+    pin:
+      selector:
+        text:
+learn_card:
+  fields:
+    timeout:
+      default: 45
+      selector:
+        number:
+          min: 5
+          max: 120
+          unit_of_measurement: s
+sync_all:
+  fields:
+    remove_unknown:
+      default: true
+      selector:
+        boolean:

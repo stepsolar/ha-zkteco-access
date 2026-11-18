@@ -41,9 +41,42 @@ le mappe grafiche e le impronte digitali non sono gestiti.
 6. Solo dopo, se vuoi riallineare tutto, usa **Sincronizza tutti** (le tessere presenti nei
    controller ma non nell'add-on vengono rimosse).
 
-## Entità Home Assistant
+## Integrazione ZKTeco Access (consigliata)
 
-Serve il broker MQTT (add-on **Mosquitto broker** + integrazione MQTT). Per ogni porta:
+Installa da HACS l'integrazione **ZKTeco Access** (stesso repository GitHub, categoria *Integrazione*).
+L'add-on si annuncia da solo: in Impostazioni → Dispositivi e servizi compare "ZKTeco Access rilevato".
+L'integrazione passa sempre dall'add-on, quindi non entra mai in conflitto con lui.
+
+Crea per ogni porta: serratura, pulsante Apri, interruttore "sempre aperta", sensore porta, allarme,
+ultimo evento ed entità evento; per ogni controller: connessione, annulla allarmi, sincronizza ora,
+riavvia; uscite/ingressi ausiliari. Servizi per le automazioni:
+
+```yaml
+service: zkteco_access.grant_card      # check-in
+data:
+  card: "2095868724"
+  name: Rossi
+  group: "101"
+  levels: ["101", "Cancello"]
+  end_date: "2026-11-21"
+---
+service: zkteco_access.disable_card    # check-out
+data:
+  card: "2095868724"
+---
+service: zkteco_access.learn_card      # restituisce il numero della prossima tessera letta
+data:
+  timeout: 45
+response_variable: tessera
+```
+
+Altri servizi: `revoke_card`, `enable_card`, `sync_all`.
+
+## Entità via MQTT (alternativa)
+
+Se non usi l'integrazione puoi attivare l'opzione `mqtt_enabled` dell'add-on (serve il broker
+**Mosquitto**). Non attivarla insieme all'integrazione, altrimenti avrai le entità doppie; quando la
+disattivi, le entità MQTT create in precedenza vengono rimosse. Per ogni porta:
 
 - `lock.*` serratura: *Sblocca/Apri* = impulso di apertura, *Blocca* = chiude subito
 - `button.* apri`, `switch.* sempre aperta`

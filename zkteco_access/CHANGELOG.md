@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.0
+- Nuova integrazione Home Assistant **ZKTeco Access** (HACS, cartella custom_components) che usa l'add-on come unico punto di accesso ai controller: serrature, pulsanti, sensori, eventi e servizi tessere.
+- L'add-on si annuncia a Home Assistant (scoperta automatica dell'integrazione) e accetta le richieste di Home Assistant.
+- Entità MQTT ora disattivate di default (`mqtt_enabled`); disattivandole vengono rimosse quelle già create, per evitare doppioni con l'integrazione.
+
 ## 1.0.2
 - Interfaccia ottimizzata per smartphone: menu a scorrimento, tabelle trasformate in schede, finestre a tutto schermo, pulsanti più grandi, nessuno zoom automatico su iPhone.
 

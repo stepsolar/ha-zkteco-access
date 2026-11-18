@@ -16,6 +16,24 @@ aggiungi `https://github.com/stepsolar/ha-zkteco-access` → installa **ZKTeco A
 
 Documentazione completa: [zkteco_access/DOCS.md](zkteco_access/DOCS.md).
 
+## Integrazione Home Assistant (porte, serrature, sensori)
+
+Nella cartella [`custom_components/zkteco_access`](custom_components/zkteco_access) c'è l'integrazione
+**ZKTeco Access**, simile a [hass-zkaccess_c3](https://github.com/vwout/hass-zkaccess_c3) ma **dipendente
+dall'add-on**: non apre connessioni verso i controller, manda ogni comando all'add-on. Così c'è un solo
+programma che parla con i controller e non ci sono conflitti su eventi e tessere.
+
+Installazione con **HACS**: HACS → ⋮ → Repository personalizzati → `https://github.com/stepsolar/ha-zkteco-access`,
+categoria *Integrazione* → scarica **ZKTeco Access** → riavvia Home Assistant. Con l'add-on avviato,
+in Impostazioni → Dispositivi e servizi compare **"ZKTeco Access rilevato"**: premi *Configura*.
+(Manuale: copia `custom_components/zkteco_access` in `/config/custom_components/`.)
+
+Entità create per ogni porta: serratura (`lock`, sblocca/apri = impulso, blocca = richiude), pulsante
+*Apri*, interruttore *sempre aperta*, sensore porta, allarme, ultimo evento, entità evento per le automazioni.
+Per ogni controller: connessione, annulla allarmi, sincronizza ora, riavvia; uscite ausiliarie come
+interruttori, ingressi ausiliari come sensori. Servizi: `zkteco_access.grant_card`, `revoke_card`,
+`enable_card`, `disable_card`, `learn_card` (restituisce il numero letto), `sync_all`.
+
 ## Sviluppo
 
 ```

@@ -1,0 +1,148 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Add-on ZKTeco Access",
+        "description": "L'integrazione comunica solo con l'add-on ZKTeco Access, che gestisce i controller. Di norma viene trovato da solo: inserisci i dati solo se non compare tra i dispositivi rilevati.",
+        "data": {
+          "host": "Host dell'add-on",
+          "port": "Porta",
+          "token": "Token API (solo se l'add-on non è su questo Home Assistant)"
+        },
+        "data_description": {
+          "host": "Nome host dell'add-on, es. local-zkteco-access oppure xxxxxxxx-zkteco-access"
+        }
+      },
+      "hassio_confirm": {
+        "title": "ZKTeco Access",
+        "description": "Vuoi collegare Home Assistant all'add-on {addon}? Verranno create serrature, sensori ed eventi per tutte le porte."
+      }
+    },
+    "error": {
+      "cannot_connect": "Impossibile raggiungere l'add-on ZKTeco Access. È avviato?",
+      "not_addon": "L'indirizzo risponde ma non è l'add-on ZKTeco Access"
+    },
+    "abort": {
+      "already_configured": "ZKTeco Access è già configurato"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opzioni",
+        "data": {
+          "unlock_seconds": "Durata apertura porta (s)"
+        },
+        "data_description": {
+          "unlock_seconds": "0 = usa il tempo impostato per ogni porta nell'add-on"
+        }
+      }
+    }
+  },
+  "services": {
+    "grant_card": {
+      "name": "Assegna tessera",
+      "description": "Crea o aggiorna una tessera e la invia ai controller (es. check-in).",
+      "fields": {
+        "card": {
+          "name": "Numero tessera",
+          "description": "Numero RFID della tessera."
+        },
+        "pin": {
+          "name": "PIN",
+          "description": "Numero utente; se vuoto viene assegnato automaticamente."
+        },
+        "name": {
+          "name": "Nome",
+          "description": "Nome dell'ospite o dell'utente."
+        },
+        "group": {
+          "name": "Camera / gruppo",
+          "description": "Es. numero della camera."
+        },
+        "levels": {
+          "name": "Livelli",
+          "description": "Nomi dei livelli di accesso (es. 101, Cancello)."
+        },
+        "doors": {
+          "name": "Porte singole",
+          "description": "Nomi delle porte in aggiunta ai livelli."
+        },
+        "start_date": {
+          "name": "Valida dal",
+          "description": "Data di inizio validità."
+        },
+        "end_date": {
+          "name": "Valida fino al",
+          "description": "Data di fine validità (es. check-out)."
+        },
+        "add": {
+          "name": "Aggiungi",
+          "description": "Aggiunge livelli/porte a quelli esistenti invece di sostituirli."
+        }
+      }
+    },
+    "revoke_card": {
+      "name": "Elimina tessera",
+      "description": "Elimina la tessera dall'add-on e da tutti i controller.",
+      "fields": {
+        "card": {
+          "name": "Numero tessera",
+          "description": "Numero RFID."
+        },
+        "pin": {
+          "name": "PIN",
+          "description": "In alternativa al numero tessera."
+        }
+      }
+    },
+    "enable_card": {
+      "name": "Attiva tessera",
+      "description": "Riattiva una tessera disattivata.",
+      "fields": {
+        "card": {
+          "name": "Numero tessera",
+          "description": "Numero RFID."
+        },
+        "pin": {
+          "name": "PIN",
+          "description": "In alternativa al numero tessera."
+        }
+      }
+    },
+    "disable_card": {
+      "name": "Disattiva tessera",
+      "description": "Disattiva una tessera senza eliminarla (es. check-out).",
+      "fields": {
+        "card": {
+          "name": "Numero tessera",
+          "description": "Numero RFID."
+        },
+        "pin": {
+          "name": "PIN",
+          "description": "In alternativa al numero tessera."
+        }
+      }
+    },
+    "learn_card": {
+      "name": "Leggi tessera",
+      "description": "Attende che una tessera venga avvicinata a un lettore e ne restituisce il numero.",
+      "fields": {
+        "timeout": {
+          "name": "Attesa massima",
+          "description": "Secondi di attesa."
+        }
+      }
+    },
+    "sync_all": {
+      "name": "Sincronizza tutti i controller",
+      "description": "Riscrive tutte le tessere su tutti i controller.",
+      "fields": {
+        "remove_unknown": {
+          "name": "Rimuovi sconosciute",
+          "description": "Elimina dai controller le tessere non presenti nell'add-on."
+        }
+      }
+    }
+  }
+}
