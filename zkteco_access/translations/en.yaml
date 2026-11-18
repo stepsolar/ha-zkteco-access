@@ -1,0 +1,31 @@
+configuration:
+  log_level:
+    name: Log level
+  poll_interval:
+    name: Event polling interval (s)
+  timeout:
+    name: Network timeout (s)
+  sync_time_on_connect:
+    name: Sync controller clock
+  auto_disable_expired:
+    name: Automatically disable expired cards
+  mqtt_enabled:
+    name: Create Home Assistant entities (MQTT)
+  mqtt_topic:
+    name: MQTT base topic
+  discovery_prefix:
+    name: MQTT discovery prefix
+  import_path:
+    name: ZKAccess database to import on first start
+  api_token:
+    name: Direct API token
+  mqtt_host:
+    name: MQTT broker (optional)
+  mqtt_port:
+    name: MQTT port
+  mqtt_user:
+    name: MQTT user
+  mqtt_password:
+    name: MQTT password
+network:
+  8099/tcp: Direct REST API (optional)

@@ -1,0 +1,36 @@
+configuration:
+  log_level:
+    name: Livello di log
+  poll_interval:
+    name: Intervallo di lettura eventi (s)
+    description: Ogni quanti secondi interrogare i controller per eventi e stato porte.
+  timeout:
+    name: Timeout di rete (s)
+  sync_time_on_connect:
+    name: Sincronizza l'ora dei controller
+    description: Imposta data e ora dei controller ad ogni connessione.
+  auto_disable_expired:
+    name: Disattiva automaticamente le tessere scadute
+  mqtt_enabled:
+    name: Crea entità Home Assistant (MQTT)
+  mqtt_topic:
+    name: Topic MQTT base
+  discovery_prefix:
+    name: Prefisso MQTT discovery
+  import_path:
+    name: Database ZKAccess da importare al primo avvio
+    description: Se il file esiste e non ci sono controller configurati, viene importato automaticamente.
+  api_token:
+    name: Token API diretta
+    description: Abilita l'accesso alla porta 8099 senza ingress (header Authorization Bearer).
+  mqtt_host:
+    name: Broker MQTT (facoltativo)
+    description: Lasciare vuoto per usare il broker Mosquitto di Home Assistant.
+  mqtt_port:
+    name: Porta broker MQTT
+  mqtt_user:
+    name: Utente MQTT
+  mqtt_password:
+    name: Password MQTT
+network:
+  8099/tcp: API REST diretta (facoltativa)
