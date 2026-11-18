@@ -499,6 +499,17 @@ $("#btnRestore").onclick = async () => {
   await run(async () => api("api/restore", { body: await f.text(), raw: true }), "Backup ripristinato"); loadState();
 };
 
+/* --------------------------- etichette colonne per la vista mobile a schede */
+function labelTables() {
+  $$("table.tbl").forEach((t) => {
+    const heads = $$("thead th", t).map((th) => th.textContent.trim());
+    if (!heads.length) return;
+    $$("tbody tr", t).forEach((tr) => [...tr.children].forEach((td, i) => { if (!td.hasAttribute("data-label")) td.setAttribute("data-label", td.colSpan > 1 ? "" : heads[i] || ""); }));
+  });
+}
+let _lt;
+new MutationObserver(() => { clearTimeout(_lt); _lt = setTimeout(labelTables, 30); }).observe(document.body, { childList: true, subtree: true });
+
 /* ---------------------------------------------------------------- avvio */
 (async function init() {
   try { await loadState(); await loadFeed(); } catch (e) { toast("Errore di caricamento: " + e.message, true); }

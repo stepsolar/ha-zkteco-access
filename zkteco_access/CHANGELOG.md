@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.2
+- Interfaccia ottimizzata per smartphone: menu a scorrimento, tabelle trasformate in schede, finestre a tutto schermo, pulsanti più grandi, nessuno zoom automatico su iPhone.
+
 ## 1.0.1
 - Import di zkaccess.mdb dal browser inviato a pezzi da 4 MB: risolve l'errore 413 del proxy ingress di Home Assistant.
 

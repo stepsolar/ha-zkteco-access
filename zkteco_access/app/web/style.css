@@ -98,3 +98,69 @@ code,.code{font-family:ui-monospace,Consolas,monospace;font-size:12px}
 #toast div.err{background:var(--bad)}
 .tzgrid{display:grid;grid-template-columns:90px repeat(3,1fr);gap:4px 8px;align-items:center}
 .tzgrid input{padding:4px 6px}
+
+/* ------------------------------------------------------------ mobile */
+@media (max-width:760px){
+  body{font-size:15px}
+  .topbar{display:grid;grid-template-columns:1fr auto;gap:6px 10px;padding:8px 10px 0}
+  .brand img{width:30px;height:30px}
+  .status{justify-self:end;order:2}
+  nav{order:3}
+  .status .pill{font-size:11px;padding:2px 7px}
+  nav{grid-column:1/-1;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:0 -10px;padding:0 6px 6px}
+  nav::-webkit-scrollbar{display:none}
+  nav button{flex:none;padding:8px 11px}
+  main{padding:10px}
+  .toolbar{gap:6px}
+  .toolbar input[type=search],.toolbar input:not([type]){min-width:0;flex:1 1 100%}
+  .toolbar select{flex:1 1 45%;min-width:0}
+  .toolbar .btn{flex:1 1 auto;justify-content:center}
+  .toolbar .grow{display:none}
+  .toolbar .hint{flex:1 1 100%}
+  .card{padding:10px}
+  .cards{grid-template-columns:1fr}
+  .row>*{flex:1 1 auto}
+  /* monitor */
+  .monitor{grid-template-columns:1fr}
+  .feed{position:static;max-height:45vh}
+  .panel-head{flex-wrap:wrap}
+  .panel-head .grow{display:none}
+  .doors{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+  .door .acts{flex-wrap:wrap}
+  .door .acts .btn{flex:1;justify-content:center;padding:8px 6px}
+  /* tabelle -> schede */
+  .tbl thead{display:none}
+  .tbl,.tbl tbody,.tbl tr,.tbl td{display:block;width:100%}
+  .tbl tr{border:1px solid var(--line);border-radius:10px;padding:6px 10px;margin-bottom:8px;background:var(--card)}
+  .tbl tr:hover td{background:none}
+  .tbl td{border:0;padding:4px 0;display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:right;min-height:30px}
+  .tbl td::before{content:attr(data-label);color:var(--muted);font-size:12px;font-weight:600;text-align:left;flex:none;max-width:45%}
+  .tbl td[data-label=""]::before{display:none}
+  .tbl td>input:not([type=checkbox]),.tbl td>select{width:60%!important;flex:none}
+  .tbl td:has(.btn){justify-content:flex-end;flex-wrap:wrap;gap:6px;white-space:normal!important}
+  .tbl td:has(.btn)::before{display:none}
+  .tbl tr{position:relative}
+  .tbl td:has(>.sel),.tbl td:has(>.dot){position:absolute;top:8px;right:10px;width:auto;min-height:0;padding:0}
+  .tbl td:has(>.sel)+td,.tbl td:has(>.dot)+td{padding-right:34px}
+  .tbl td .tag{margin:1px 0 1px 3px}
+  .tbl td:has(.tag){flex-wrap:wrap;justify-content:flex-end}
+  /* modale a tutto schermo */
+  .modal{padding:0;align-items:stretch}
+  .modal-box{width:100%;min-height:100%;border-radius:0;display:flex;flex-direction:column}
+  #modalBody{max-height:none;flex:1;padding:12px}
+  .modal-head{position:sticky;top:0;background:var(--card);z-index:1;padding:10px 12px}
+  .modal-foot{position:sticky;bottom:0;background:var(--card);flex-wrap:wrap;padding:10px 12px;gap:6px}
+  .modal-foot .btn{flex:1 1 40%;justify-content:center}
+  .form{grid-template-columns:1fr}
+  .learn{flex-wrap:wrap}
+  .learn input{flex:1 1 100%}
+  .learn select,.learn .btn{flex:1 1 45%}
+  .picker{max-height:40vh}
+  .tzgrid{grid-template-columns:1fr 1fr}
+  .tzgrid>b{display:none}
+  .tzgrid>span:not(:has(input)){grid-column:1/-1;font-weight:700;margin-top:6px}
+  .tzgrid input{width:42%}
+  #toast{left:10px;right:10px;bottom:10px}
+  #toast div{max-width:none}
+  input,select,textarea{font-size:16px}  /* evita lo zoom automatico su iPhone */
+}
