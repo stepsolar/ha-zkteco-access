@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.1.2
+- Integrazione: logo e icona propri (cartella brand, anche per tema scuro).
+
 ## 1.1.1
 - L'add-on accetta le richieste da tutta la rete interna di Home Assistant (172.30.32.0/23) e registra nel log quelle rifiutate.
 - Integrazione: trova da sola il nome host dell'add-on installato da GitHub e mostra il motivo preciso dell'errore (host non trovato, connessione rifiutata, accesso negato).
